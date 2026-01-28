@@ -1,0 +1,97 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider  = "postgresql"
+  url       = env("DATABASE_URL")
+  directUrl = env("DIRECT_URL")
+}
+
+model UserProfile {
+  id              String    @id @default(uuid())
+  userId          String    @unique // Reference to Auth Service User.id
+  username        String    @unique
+  email           String    @unique
+  name            String
+  nip             String?   @unique // For teachers/staff
+  phone           String?
+  mobilePhone     String?
+  address         String?
+  city            String?
+  province        String?
+  postalCode      String?
+  photoUrl        String?
+  birthDate       DateTime?
+  birthPlace      String?
+  gender          Gender?
+  religion        Religion?
+  bloodType       BloodType?
+  maritalStatus   MaritalStatus?
+  
+  // Emergency Contact
+  emergencyContactName    String?
+  emergencyContactPhone   String?
+  emergencyContactRelation String?
+  
+  // Employment Info (for teachers/staff)
+  employeeType    EmployeeType?
+  department      String?
+  position        String?
+  joinDate        DateTime?
+  
+  // Document URLs
+  ktpUrl          String?
+  certificateUrl  String?
+  
+  // Meta
+  isActive        Boolean   @default(true)
+  lastSyncedAt    DateTime? // Last sync with Auth Service
+  createdBy       String
+  createdAt       DateTime  @default(now())
+  updatedBy       String?
+  updatedAt       DateTime  @updatedAt
+  deletedAt       DateTime?
+  deletedBy       String?
+  
+  @@index([userId])
+  @@index([email])
+  @@index([nip])
+  @@map("user_profiles")
+}
+
+enum Gender {
+  MALE
+  FEMALE
+}
+
+enum Religion {
+  ISLAM
+  KRISTEN
+  KATOLIK
+  HINDU
+  BUDDHA
+  KONGHUCU
+}
+
+enum BloodType {
+  A
+  B
+  AB
+  O
+}
+
+enum MaritalStatus {
+  SINGLE
+  MARRIED
+  DIVORCED
+  WIDOWED
+}
+
+enum EmployeeType {
+  PNS
+  PPPK
+  GTT
+  PTT
+  HONORER
+}
