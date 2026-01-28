@@ -16,14 +16,19 @@ const logger = winston.createLogger({
     new winston.transports.Console({
       format: winston.format.combine(winston.format.colorize(), winston.format.simple()),
     }),
+  ],
+});
+
+if (process.env.NODE_ENV !== 'production') {
+  logger.add(
     new winston.transports.DailyRotateFile({
       filename: path.join(process.env.LOG_FILE_PATH || './logs', 'user-service-%DATE%.log'),
       datePattern: 'YYYY-MM-DD',
       zippedArchive: true,
       maxSize: '20m',
       maxFiles: '14d',
-    }),
-  ],
-});
+    })
+  );
+}
 
 export default logger;
