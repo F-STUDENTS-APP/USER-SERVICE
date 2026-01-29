@@ -15,7 +15,7 @@ export const authenticate = (req: Request, res: Response, next: NextFunction) =>
   }
 
   // Attach user to request
-  (req as any).user = {
+  req.user = {
     id: userId || 'SYSTEM',
   };
 

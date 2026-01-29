@@ -3,6 +3,10 @@ import { sendResponse, sendError } from '../utils/response';
 import { createUserSchema, updateUserSchema } from '../validators/user.validator';
 import * as userService from '../services/user.service';
 
+interface PrismaError {
+  code: string;
+}
+
 /**
  * @swagger
  * /api/v1/users:
@@ -110,7 +114,7 @@ export const createUserProfile = async (req: Request, res: Response) => {
 
   const profile = await userService.create({
     ...value,
-    createdBy: (req as any).user?.id || 'SYSTEM',
+    createdBy: req.user?.id || 'SYSTEM',
   });
 
   return sendResponse(res, 201, true, 'User profile created', profile);
@@ -148,11 +152,11 @@ export const updateUserProfile = async (req: Request, res: Response) => {
   try {
     const updated = await userService.update(id, {
       ...value,
-      updatedBy: (req as any).user?.id || 'SYSTEM',
+      updatedBy: req.user?.id || 'SYSTEM',
     });
     return sendResponse(res, 200, true, 'User profile updated', updated);
-  } catch (err: any) {
-    if (err.code === 'P2025') return sendError(res, 404, 'User profile not found');
+  } catch (err: unknown) {
+    if ((err as PrismaError).code === 'P2025') return sendError(res, 404, 'User profile not found');
     throw err;
   }
 };
@@ -177,13 +181,13 @@ export const updateUserProfile = async (req: Request, res: Response) => {
  */
 export const deleteUserProfile = async (req: Request, res: Response) => {
   const { id } = req.params;
-  const deletedBy = (req as any).user?.id || 'SYSTEM';
+  const deletedBy = req.user?.id || 'SYSTEM';
 
   try {
     await userService.softDelete(id, deletedBy);
     return sendResponse(res, 200, true, 'User profile deleted successfully');
-  } catch (err: any) {
-    if (err.code === 'P2025') return sendError(res, 404, 'User profile not found');
+  } catch (err: unknown) {
+    if ((err as PrismaError).code === 'P2025') return sendError(res, 404, 'User profile not found');
     throw err;
   }
 };

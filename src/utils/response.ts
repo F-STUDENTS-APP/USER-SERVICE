@@ -1,18 +1,18 @@
 import { Response } from 'express';
 
-export const sendResponse = (
+export const sendResponse = <T>(
   res: Response,
   statusCode: number,
   success: boolean,
   message: string,
-  data: any = null,
-  pagination: any = null
+  data: T | null = null,
+  pagination: unknown = null
 ) => {
   return res.status(statusCode).json({
     success,
     message,
     data,
-    ...(pagination && { pagination }),
+    ...(pagination ? { pagination } : {}),
   });
 };
 
@@ -20,11 +20,11 @@ export const sendError = (
   res: Response,
   statusCode: number,
   message: string,
-  errors: any = null
+  errors: unknown = null
 ) => {
   return res.status(statusCode).json({
     success: false,
     message,
-    ...(errors && { errors }),
+    ...(errors ? { errors } : {}),
   });
 };

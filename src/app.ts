@@ -43,7 +43,12 @@ app.get('/health', (req: Request, res: Response) => {
 });
 
 // Error handling
-app.use((err: any, req: Request, res: Response, _next: NextFunction) => {
+// Error handling
+interface AppError extends Error {
+  statusCode?: number;
+}
+
+app.use((err: AppError, req: Request, res: Response, _next: NextFunction) => {
   logger.error(err.stack);
   const status = err.statusCode || 500;
   const message = err.message || 'Internal Server Error';
