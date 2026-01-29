@@ -1,5 +1,7 @@
 import swaggerJsdoc from 'swagger-jsdoc';
 
+import path from 'path';
+
 const options: swaggerJsdoc.Options = {
   definition: {
     openapi: '3.0.0',
@@ -13,6 +15,10 @@ const options: swaggerJsdoc.Options = {
         url: 'http://localhost:3002',
         description: 'Development server',
       },
+      {
+        url: 'https://user-service-orpin.vercel.app', // Update with actual URL if known or dynamic
+        description: 'Production server',
+      },
     ],
     components: {
       securitySchemes: {
@@ -25,10 +31,10 @@ const options: swaggerJsdoc.Options = {
     },
   },
   apis: [
-    './src/routes/*.ts',
-    './src/controllers/*.ts',
-    './dist/routes/*.js',
-    './dist/controllers/*.js',
+    path.join(__dirname, '../routes/*.ts'),
+    path.join(__dirname, '../controllers/*.ts'),
+    path.join(process.cwd(), 'dist/routes/*.js'),
+    path.join(process.cwd(), 'dist/controllers/*.js'),
   ],
 };
 
