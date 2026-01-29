@@ -42,6 +42,10 @@ try {
   logger.error('Failed to setup Swagger UI:', error);
 }
 
+app.get('/', (req: Request, res: Response) => {
+  res.redirect('/api-docs');
+});
+
 app.get('/health', (req: Request, res: Response) => {
   res.status(200).json({ status: 'OK', service: 'user-service' });
 });
