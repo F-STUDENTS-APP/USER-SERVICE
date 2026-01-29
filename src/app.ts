@@ -37,7 +37,17 @@ import userRoutes from './routes/user.routes';
 
 app.use('/api/v1/users', userRoutes);
 try {
-  app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(specs));
+  app.use(
+    '/api-docs',
+    swaggerUi.serve,
+    swaggerUi.setup(specs, {
+      customCssUrl: 'https://cdnjs.cloudflare.com/ajax/libs/swagger-ui/5.0.0/swagger-ui.min.css',
+      customJs: [
+        'https://cdnjs.cloudflare.com/ajax/libs/swagger-ui/5.0.0/swagger-ui-bundle.js',
+        'https://cdnjs.cloudflare.com/ajax/libs/swagger-ui/5.0.0/swagger-ui-standalone-preset.js',
+      ],
+    })
+  );
 } catch (error) {
   logger.error('Failed to setup Swagger UI:', error);
 }
