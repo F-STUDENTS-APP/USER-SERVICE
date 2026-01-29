@@ -36,7 +36,11 @@ app.use((req: Request, res: Response, next: NextFunction) => {
 import userRoutes from './routes/user.routes';
 
 app.use('/api/v1/users', userRoutes);
-app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(specs));
+try {
+  app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(specs));
+} catch (error) {
+  logger.error('Failed to setup Swagger UI:', error);
+}
 
 app.get('/health', (req: Request, res: Response) => {
   res.status(200).json({ status: 'OK', service: 'user-service' });
