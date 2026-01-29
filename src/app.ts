@@ -55,7 +55,7 @@ app.use((err: AppError, req: Request, res: Response, _next: NextFunction) => {
   sendError(res, status, message);
 });
 
-if (process.env.NODE_ENV !== 'test') {
+if (process.env.NODE_ENV !== 'test' && !process.env.VERCEL) {
   app.listen(port, () => {
     logger.info(`User Service listening on port ${port}`);
   });
