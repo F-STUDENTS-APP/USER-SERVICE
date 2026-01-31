@@ -7,7 +7,8 @@ import dotenv from 'dotenv';
 import swaggerUi from 'swagger-ui-express';
 import specs from './config/swagger.config';
 import logger from './config/logger';
-import { sendError } from './utils/response';
+import { errorHandler } from '@common/middlewares/error.handler';
+import { healthCheck } from '@common/utils/health';
 
 dotenv.config();
 
@@ -56,22 +57,10 @@ app.get('/', (req: Request, res: Response) => {
   res.redirect('/api-docs');
 });
 
-app.get('/health', (req: Request, res: Response) => {
-  res.status(200).json({ status: 'OK', service: 'user-service' });
-});
+app.get('/health', healthCheck('user-service'));
 
 // Error handling
-// Error handling
-interface AppError extends Error {
-  statusCode?: number;
-}
-
-app.use((err: AppError, req: Request, res: Response, _next: NextFunction) => {
-  logger.error(err.stack);
-  const status = err.statusCode || 500;
-  const message = err.message || 'Internal Server Error';
-  sendError(res, status, message);
-});
+app.use(errorHandler);
 
 if (process.env.NODE_ENV !== 'test' && !process.env.VERCEL) {
   app.listen(port, () => {
