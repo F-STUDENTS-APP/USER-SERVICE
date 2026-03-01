@@ -7,8 +7,8 @@ import dotenv from 'dotenv';
 import swaggerUi from 'swagger-ui-express';
 import specs from './config/swagger.config';
 import logger from './config/logger';
-import { errorHandler } from '@common/middlewares/error.handler';
-import { healthCheck } from '@common/utils/health';
+import { errorHandler } from '@microservices/common/middlewares/error.handler';
+import { healthCheck } from '@microservices/common/utils/health';
 
 dotenv.config();
 
